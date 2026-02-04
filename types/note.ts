@@ -14,3 +14,8 @@ export interface NoteForm {
   content: string;
   tag: Tag;
 }
+
+export interface GetNotesResponse {
+  notes: Note[];
+  totalPages: number;
+}

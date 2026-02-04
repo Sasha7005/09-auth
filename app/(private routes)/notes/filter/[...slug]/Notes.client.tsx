@@ -7,7 +7,7 @@ import { useDebouncedCallback } from "use-debounce";
 import NoteList from "@/components/NoteList/NoteList";
 import toast, { Toaster } from "react-hot-toast";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api/clientApi";
 import Pagination from "@/components/Pagination/Pagination";
 import Link from "next/link";
 
@@ -24,7 +24,7 @@ export default function NoteClient({ tag }: NoteDetailsClientProps) {
 
   const { data, isSuccess, isPending } = useQuery({
     queryKey: ["notes", currentPage, currentQuery, tag],
-    queryFn: () => getNotes(currentPage, currentQuery, tag),
+    queryFn: () => fetchNotes(currentPage, currentQuery, tag),
     placeholderData: keepPreviousData,
   });
 
