@@ -64,8 +64,8 @@ async function checkSession() {
   return data.success;
 }
 
-async function getMe() {
-  const { data } = await nextServer.get<User>("/auth/me");
+async function getMe(): Promise<User> {
+  const { data } = await nextServer.get<User>("/users/me");
 
   return data;
 }

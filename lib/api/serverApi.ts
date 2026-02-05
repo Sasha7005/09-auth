@@ -34,18 +34,18 @@ async function fetchNoteById(id: string): Promise<Note> {
 }
 async function checkSession() {
   const cookieStore = await cookies();
-  const { data } = await nextServer.get<{ success: boolean }>("/auth/session", {
+  const responce = await nextServer.get<{ success: boolean }>("/auth/session", {
     headers: {
       Cookie: cookieStore.toString(),
     },
   });
 
-  return data.success;
+  return responce;
 }
 
 async function getMe() {
   const cookieStore = await cookies();
-  const { data } = await nextServer.get<User>("/auth/me", {
+  const { data } = await nextServer.get<User>("/users/me", {
     headers: {
       Cookie: cookieStore.toString(),
     },

@@ -1,5 +1,6 @@
 "use client";
 
+import css from "./SignUpPage.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { register, RegisterRequest } from "@/lib/api/clientApi";
@@ -26,25 +27,40 @@ const SignUp = () => {
   };
 
   return (
-    <>
-      <h1>Sign up</h1>
-      <form action={handleSubmit}>
-        <label>
-          Username
-          <input type="text" name="userName" required />
-        </label>
-        <label>
-          Email
-          <input type="email" name="email" required />
-        </label>
-        <label>
-          Password
-          <input type="password" name="password" required />
-        </label>
-        <button type="submit">Register</button>
+    <main className={css.mainContent}>
+      <h1 className={css.formTitle}>Sign up</h1>
+      <form className={css.form} action={handleSubmit}>
+        <div className={css.formGroup}>
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            className={css.input}
+            required
+          />
+        </div>
+
+        <div className={css.formGroup}>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            className={css.input}
+            required
+          />
+        </div>
+
+        <div className={css.actions}>
+          <button type="submit" className={css.submitButton}>
+            Register
+          </button>
+        </div>
+
+        {error && <p className={css.error}>Error</p>}
       </form>
-      {error && <p>{error}</p>}
-    </>
+    </main>
   );
 };
 

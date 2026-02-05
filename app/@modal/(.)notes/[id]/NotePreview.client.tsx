@@ -3,7 +3,7 @@ import css from "./NotePreview.module.css";
 import Modal from "@/components/Modal/Modal";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
-import { getNoteById } from "@/lib/api";
+import { fetchNoteById } from "@/lib/api/clientApi";
 
 export default function NotePreviewClient() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function NotePreviewClient() {
     error,
   } = useQuery({
     queryKey: ["notes", id],
-    queryFn: () => getNoteById(id),
+    queryFn: () => fetchNoteById(id),
     refetchOnMount: false,
   });
 

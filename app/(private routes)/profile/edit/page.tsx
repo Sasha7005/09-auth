@@ -45,6 +45,10 @@ const EditProfile = () => {
     editProfileMutation.mutate(newUsername);
   };
 
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <main className={css.mainContent}>
       <div className={css.profileCard}>
@@ -72,7 +76,9 @@ const EditProfile = () => {
             />
           </div>
 
-          <p>{user?.email}</p>
+          <p>{user.email}</p>
+
+          {errorMsg && <p className={css.error}>{errorMsg}</p>}
 
           <div className={css.actions}>
             <button
@@ -80,7 +86,7 @@ const EditProfile = () => {
               type="submit"
               className={css.saveButton}
             >
-              Save
+              {editProfileMutation.isPending ? "Saving..." : "Save"}
             </button>
             <button
               onClick={handleCancel}
