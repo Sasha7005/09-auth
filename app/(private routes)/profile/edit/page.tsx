@@ -1,17 +1,49 @@
 "use client";
 
 import css from "./EditProfilePage.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getMe, updateMe } from "@/lib/api/clientApi";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useMutation } from "@tanstack/react-query";
 
 const EditProfile = () => {
   const router = useRouter();
+
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
-  const [userName, setUserName] = useState<string | undefined>(user?.username);
+
+  const [username, setUsername] = useState(user?.username || "");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const editProfileMutation = useMutation({
+    mutationFn: updateMe,
+
+    onSuccess: async () => {
+      const upMe = await getMe();
+      setUser(upMe);
+
+      router.push("/profile");
+    },
+    onError: () => {
+      setErrorMsg("Failed to edit username");
+    },
+  });
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+  };
+
+  const handleCancel = () => {
+    router.back();
+  };
+
+  const handleSubmit = (formData: FormData) => {
+    const newUsername = formData.get("username") as string;
+
+    editProfileMutation.mutate(newUsername);
+  };
 
   return (
     <main className={css.mainContent}>
@@ -19,26 +51,42 @@ const EditProfile = () => {
         <h1 className={css.formTitle}>Edit Profile</h1>
 
         <Image
-          src="avatar"
+          src={user.avatar}
           alt="User Avatar"
           width={120}
           height={120}
           className={css.avatar}
         />
 
-        <form className={css.profileInfo} action={}>
+        <form className={css.profileInfo} action={handleSubmit}>
           <div className={css.usernameWrapper}>
             <label htmlFor="username">Username:</label>
-            <input id="username" type="text" className={css.input} />
+            <input
+              disabled={editProfileMutation.isPending}
+              name="username"
+              defaultValue={username}
+              onChange={handleInput}
+              id="username"
+              type="text"
+              className={css.input}
+            />
           </div>
 
-          <p>{}</p>
+          <p>{user?.email}</p>
 
           <div className={css.actions}>
-            <button type="submit" className={css.saveButton}>
+            <button
+              disabled={editProfileMutation.isPending}
+              type="submit"
+              className={css.saveButton}
+            >
               Save
             </button>
-            <button type="button" className={css.cancelButton}>
+            <button
+              onClick={handleCancel}
+              type="button"
+              className={css.cancelButton}
+            >
               Cancel
             </button>
           </div>
